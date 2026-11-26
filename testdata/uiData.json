@@ -1,0 +1,35 @@
+{
+  "navigation": [
+    {
+      "page": "ChangePassword.php",
+      "heading": "Change Password"
+    },
+    {
+      "page": "SearchHotel.php",
+      "heading": "Search Hotel"
+    }
+  ],
+  "validSearch": {
+    "location": "Sydney",
+    "hotel": "Hotel Creek",
+    "roomType": "Standard",
+    "rooms": "1",
+    "adults": "2",
+    "ExpectedTitle": "Select Hotel"
+  },
+  "noLocationSearch": {
+    "location": "",
+    "rooms": "1",
+    "adults": "1",
+    "ExpectedError": "Please Select a Location"
+  },
+  "itinerary": {
+    "ExpectedTitle": "Booked Itinerary",
+    "ExpectedDialog": "Are you sure, you want to cancel the booking with Order no."
+  },
+  "session": {
+    "cookieName": "PHPSESSID",
+    "protectedPage": "SearchHotel.php",
+    "loginPage": "index.php"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "endpoints": {
+    "allUsers": "/all-users",
+    "register": "/register",
+    "login": "/login",
+    "replace": "/replace-account",
+    "delete": "/delete-account"
+  },
+  "newUser": {
+    "fullname": "Api Test User",
+    "usernamePrefix": "pwapiuser",
+    "emailDomain": "@example.com",
+    "password": "Password123!"
+  },
+  "updatedUser": {
+    "fullname": "Updated User",
+    "usernamePrefix": "pwupdated"
+  },
+  "userSchema": {
+    "_id": "string",
+    "username": "string",
+    "email": "string",
+    "fullname": "string",
+    "createdAt": "string"
+  },
+  "maxResponseTime": 10000,
+  "maxListResponseTime": 20000,
+  "expected": {
+    "registerMsg": "User registered Successfully",
+    "loginMsg": "User Logged in successfully",
+    "replaceMsg": "User details replaced successfully",
+    "deleteMsg": "User account deleted successfully",
+    "userNotFoundMsg": "User does not Exists"
+  },
+  "negativeTests": [
+    {
+      "name": "POST register with missing fields",
+      "method": "post",
+      "endpoint": "/register",
+      "payload": {
+        "email": "missingfields@example.com"
+      },
+      "expectedStatus": 400,
+      "expectedMessage": "All fields (fullname, email, username, password) are required"
+    },
+    {
+      "name": "PUT replace account without login",
+      "method": "put",
+      "endpoint": "/replace-account",
+      "payload": {
+        "fullname": "No Login",
+        "email": "nologin@example.com",
+        "username": "nologinuser"
+      },
+      "expectedStatus": 401,
+      "expectedMessage": "Unauthorized Access"
+    },
+    {
+      "name": "POST login with unknown user",
+      "method": "post",
+      "endpoint": "/login",
+      "payload": {
+        "email": "no_such_user_pw9@example.com",
+        "username": "no_such_user_pw9",
+        "password": "Password123!"
+      },
+      "expectedStatus": 404,
+      "expectedMessage": "User does not Exists"
+    }
+  ]
+}

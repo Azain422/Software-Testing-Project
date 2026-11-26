@@ -1,0 +1,41 @@
+{
+  "validUsers": [
+    {
+      "username": "haristester01",
+      "password": "haristester01",
+      "ExpectedMsg": "Welcome to Adactin Group of Hotels"
+    }
+  ],
+  "invalidUsers": [
+    {
+      "username": "haristester01",
+      "password": "WrongPass123",
+      "ExpectedError": "Invalid Login details or Your Password might have expired."
+    }
+  ],
+  "emptyFields": {
+    "username": "",
+    "password": "",
+    "ExpectedError": "Enter Username"
+  },
+  "sqlInjection": [
+    {
+      "name": "OR 1=1",
+      "username": "' OR '1'='1",
+      "password": "' OR '1'='1"
+    },
+    {
+      "name": "comment bypass",
+      "username": "admin'--",
+      "password": "anything"
+    },
+    {
+      "name": "UNION SELECT",
+      "username": "' UNION SELECT NULL--",
+      "password": "' UNION SELECT NULL--"
+    }
+  ],
+  "sqlExpectedError": "Invalid Login details or Your Password might have expired.",
+  "dbErrorWords": ["SQL syntax", "mysql_", "mysqli", "Warning:", "ODBC", "Fatal error"],
+  "logoutMsg": "You have successfully logged out"
+}

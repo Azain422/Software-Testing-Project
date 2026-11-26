@@ -1,0 +1,14 @@
+node_modules
+playwright-report
+test-results
+allure-results
+allure-report
+screenshots
+logs
+Lectures
+*.docx
+.git
+.vscode
+npm-debug.log
+*.md
+*.msi

@@ -1,0 +1,14 @@
+node_modules/
+test-results/
+playwright-report/
+allure-results/
+allure-report/
+screenshots/
+logs/
+/blob-report/
+/playwright/.cache/
+
+# course material, not part of the framework
+Lectures/
+*.docx
+*.msi

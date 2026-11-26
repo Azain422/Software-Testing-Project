@@ -198,12 +198,14 @@ Post actions (always run): publish Allure report, publish Playwright HTML report
 Triggers: GitHub push webhook and a nightly schedule (`H 2 * * *`).
 
 Jenkins setup:
-1. Plugins: Git, GitHub, Pipeline, HTML Publisher, Allure Jenkins Plugin.
-2. Manage Jenkins -> Tools -> Allure Commandline -> Add, tick "Install automatically".
-3. Add the GitHub token as a "Username with password" credential (Part 08, section 6.5).
-4. New Item -> Pipeline -> Definition: "Pipeline script from SCM" -> Git -> repository URL and credential -> branch `*/main` -> Script Path `Jenkinsfile`.
-5. Tick "GitHub hook trigger for GITScm polling" and point the GitHub webhook to `<ngrok url>/github-webhook/` (Part 08, Part 7).
-6. Docker Desktop must be running on the Jenkins machine.
+1. Install Jenkins LTS (Windows .msi). Jenkins 2.580 needs Java 21 or 25, so install a JDK 21 (e.g. Eclipse Temurin 21) and select it in the installer.
+2. Plugins: Git, GitHub, NodeJS, HTML Publisher (Part 08) plus Pipeline and Allure.
+3. Manage Jenkins -> Tools -> Allure Commandline -> Add, name `allure`, tick "Install automatically" (version 2.46.2).
+4. Docker Desktop is installed per user, so the Jenkins service cannot see it on PATH. Manage Jenkins -> System -> Global properties -> Environment variables: `PATH+DOCKER` = `C:\Users\<user>\AppData\Local\Programs\DockerDesktop\resources\bin`.
+5. New Item -> Pipeline -> Definition: "Pipeline script from SCM" -> Git -> `https://github.com/Azain422/Software-Testing-Project.git` -> branch `*/main` -> Script Path `Jenkinsfile`. The repository is public, so no credential is needed (for a private repo add a GitHub token as in Part 08, section 6.5).
+6. Run "Build Now" once so Jenkins reads the `triggers` block from the Jenkinsfile.
+7. For builds on every push, run ngrok and point the GitHub webhook to `<ngrok url>/github-webhook/` (Part 08, Part 7).
+8. Docker Desktop must be running on the Jenkins machine.
 
 ## Known Issues
 

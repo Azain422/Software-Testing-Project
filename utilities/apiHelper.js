@@ -6,7 +6,6 @@ export async function sendRequest(request, method, endpoint, data) {
   const start = Date.now();
   const response = await request[method](config.apiBaseURL + endpoint, { data });
   const responseTime = Date.now() - start;
-  // the API sometimes returns a plain text "server error" page instead of JSON
   const isJson = (response.headers()['content-type'] || '').includes('application/json');
   const body = isJson ? await response.json() : await response.text();
 

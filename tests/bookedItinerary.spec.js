@@ -32,7 +32,6 @@ test.describe('Booked Itinerary', () => {
     });
 
     await test.step('Click Cancel and dismiss the confirm popup', async () => {
-      // dismiss only - the account is shared so we never actually cancel a booking
       const message = await itineraryPage.cancelFirstBooking(false);
       expect(message).toContain(uiData.itinerary.ExpectedDialog);
       await expect(itineraryPage.cancelButtons.first()).toBeVisible();

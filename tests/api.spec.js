@@ -5,7 +5,6 @@ import logger from '../utilities/logger.js';
 
 const api = apiData.endpoints;
 
-// API rejects duplicate users (409) so every test makes its own
 function newUser() {
   const id = `${Date.now()}${Math.floor(Math.random() * 1000)}`;
   const username = apiData.newUser.usernamePrefix + id;

@@ -1,6 +1,19 @@
 # Execution Guide
 
-## 1. First time setup
+All commands are run in PowerShell (VS Code terminal) inside the `Project` folder. Run them in this order.
+
+## 0. Before you start
+
+- Open Docker Desktop and wait until it says "Engine running" (needed for steps 5 and 7).
+- If `npx` or `docker` is "not recognized", close and reopen VS Code, or run:
+
+```
+$env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User')
+```
+
+## 1. Install
+
+`node_modules` and all report folders are not kept in the project, they are created by these commands.
 
 ```
 npm install
@@ -54,7 +67,7 @@ Notes:
 
 ## 4. Allure report
 
-Old results stay in `allure-results` until you delete them, so clear it before a run you want to show (PowerShell):
+Old results stay in `allure-results` until you delete them, so clear it before a run you want to show:
 
 ```
 Remove-Item -Recurse -Force allure-results
@@ -63,22 +76,92 @@ allure generate allure-results --clean -o allure-report
 allure open allure-report
 ```
 
-A test that fails once and passes on the retry shows as "flaky" in the report. The two demo sites are shared, so an occasional 500 from the API or a slow page is normal.
+`allure open` starts a local server and opens the report in the browser. Screenshots and logs are inside each test under the steps and "After Hooks". A test that fails once and passes on the retry shows as "flaky". The two demo sites are shared, so an occasional 500 from the API or a slow page is normal.
+
+Playwright's own HTML report:
+
+```
+npx playwright show-report
+```
 
 ## 5. Docker
 
+Remove old local results first, otherwise `docker cp` puts them inside the existing folder:
+
 ```
+Remove-Item -Recurse -Force allure-results, screenshots, logs -ErrorAction SilentlyContinue
 docker build -t playwright-tests .
 docker run --name playwright-run playwright-tests
 docker cp playwright-run:/app/allure-results ./allure-results
+docker cp playwright-run:/app/screenshots ./screenshots
+docker cp playwright-run:/app/logs ./logs
 docker rm playwright-run
+allure generate allure-results --clean -o allure-report
+allure open allure-report
 ```
 
-## 6. Jenkins
+Useful Docker commands:
 
-Push to GitHub, then click Build Now on the Pipeline job (or push a commit if the webhook is set up). The report is under "Allure Report" on the build page.
+| Command | Purpose |
+| --- | --- |
+| `docker images` | List images |
+| `docker ps -a` | List containers |
+| `docker rm playwright-run` | Remove a leftover container if the name is already in use |
+| `docker rmi playwright-tests` | Delete the image |
 
-## 7. Where each test lives
+## 6. Push to GitHub
+
+Repository: https://github.com/Azain422/Software-Testing-Project
+
+```
+git status
+git add .
+git commit -m "Describe what changed"
+git push origin main
+```
+
+## 7. Jenkins
+
+Jenkins runs as a Windows service on http://localhost:8080 and starts with Windows. Job: `Software-Testing-Project`.
+
+Check or start the service (PowerShell as administrator for start/stop):
+
+```
+Get-Service jenkins
+Start-Service jenkins
+Restart-Service jenkins
+```
+
+Run the pipeline:
+
+1. Open http://localhost:8080/job/Software-Testing-Project/
+2. Click **Build Now** (or push to GitHub if the webhook is set up, or wait for the nightly run at about 2 AM).
+3. Open the build number, then:
+   - **Console Output** - full log, ends with `PLAYWRIGHT TESTS PASSED` and `Finished: SUCCESS`
+   - **Allure Report** - all 20 tests with screenshots and logs
+   - **Playwright HTML Report** - Playwright's own report
+   - **Build Artifacts** - archived screenshots and logs
+
+What the pipeline does: checkout from GitHub -> `docker build` -> `docker run` (all 20 tests) -> `docker cp` results out -> publish Allure and HTML reports -> archive screenshots and logs -> `docker rm`.
+
+Build on every push (Part 08, Part 7 - needs an ngrok account):
+
+```
+ngrok config add-authtoken YOUR_AUTHTOKEN
+ngrok http 8080
+```
+
+Then on GitHub: repository -> Settings -> Webhooks -> Add webhook -> Payload URL `https://<ngrok-url>/github-webhook/`, content type `application/json`, "Just the push event". The free ngrok URL changes every restart, so update the webhook each time.
+
+## 8. Clean up generated files
+
+Everything below is recreated by the commands above:
+
+```
+Remove-Item -Recurse -Force node_modules, allure-results, allure-report, playwright-report, test-results, screenshots, logs -ErrorAction SilentlyContinue
+```
+
+## 9. Where each test lives
 
 | Tests           | Spec file                     | Data file               | Page objects                                       |
 | --------------- | ----------------------------- | ----------------------- | -------------------------------------------------- |
@@ -90,7 +173,7 @@ Push to GitHub, then click Build Now on the Pipeline job (or push a commit if th
 
 Common methods (login, logout, navigation, waits, screenshot, alert) are in `pages/BasePage.js`.
 
-## 8. Changing test cases
+## 10. Changing test cases
 
 ### Change only the input or expected value
 

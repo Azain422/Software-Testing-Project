@@ -3,8 +3,6 @@ import BasePage from '../pages/BasePage.js';
 import logger from '../utilities/logger.js';
 import config from '../utilities/config.js';
 
-// hooks written at the top of this file only attach to the first spec that imports it,
-// so per-test setup and teardown live in this auto fixture instead
 export const test = base.extend({
   pageSetup: [
     async ({ page }, use, testInfo) => {

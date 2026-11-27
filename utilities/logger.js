@@ -8,7 +8,6 @@ if (!fs.existsSync(config.logDir)) {
   fs.mkdirSync(config.logDir, { recursive: true });
 }
 
-// lines for the current test only, attached to the report in afterEach
 let testLogs = [];
 
 function write(level, message) {

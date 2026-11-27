@@ -50,7 +50,6 @@ class BasePage {
     await attachStepScreenshot(this.page, name);
   }
 
-  // registers the handler before the click, returns the dialog text
   async handleAlert(trigger, accept = true) {
     let message = '';
     this.page.once('dialog', async (dialog) => {

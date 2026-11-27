@@ -27,7 +27,6 @@ test.describe('Session Security', () => {
     await loginPage.login(data.username, data.password);
     await expect(loginPage.message.first()).toHaveText(data.ExpectedMsg);
 
-    // second browser context plays the attacker who got hold of the session cookie
     const attackerContext = await browser.newContext();
     const attackerPage = await attackerContext.newPage();
     const attacker = new SearchHotelPage(attackerPage);

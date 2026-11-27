@@ -7,9 +7,7 @@ pipeline {
     }
 
     triggers {
-        // GitHub webhook (needs "GitHub hook trigger for GITScm polling" set up as in Part 08)
         githubPush()
-        // nightly run as well
         cron('H 2 * * *')
     }
 
@@ -40,7 +38,6 @@ pipeline {
         stage('Run UI and API Tests') {
             steps {
                 script {
-                    // keep going on test failures so the report still gets copied and published
                     env.TEST_EXIT_CODE = bat(
                         returnStatus: true,
                         script: 'docker run --name %CONTAINER_NAME% -e CI=true %IMAGE_NAME%'

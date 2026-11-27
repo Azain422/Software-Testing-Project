@@ -9,8 +9,6 @@ class BookedItineraryPage extends BasePage {
   }
 
   async openItinerary() {
-    // shared account has thousands of bookings so the full page can take over a minute,
-    // only wait for the response to start and the first row to show up
     await this.page.goto(config.baseURL + 'BookedItinerary.php', { waitUntil: 'commit', timeout: config.longWait });
     await this.waitForElement(this.cancelButtons, config.longWait);
   }

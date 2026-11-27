@@ -8,7 +8,6 @@ logs/
 /blob-report/
 /playwright/.cache/
 
-# course material, not part of the framework
 Lectures/
 *.docx
 *.msi
